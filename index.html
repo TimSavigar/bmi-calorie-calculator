@@ -1,0 +1,88 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BMI &amp; Daily Calorie Calculator</title>
+        <meta name="description" content="Calculate your Body Mass Index and estimate daily caloric needs and macro‑nutrient targets.">
+        <meta name="keywords" content="BMI calculator,calorie calculator,daily caloric needs,macro calculator,health">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+            h1 { color: #333333; }
+            form { margin-top: 1rem; }
+            label { display: block; margin: 0.5rem 0 0.2rem; font-weight: bold; }
+            input, select { width: 100%; padding: 0.5rem; margin-bottom: 1rem; box-sizing: border-box; }
+            button { padding: 0.5rem 1rem; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+            button:hover { background-color: #004d99; }
+            .result { margin-top: 1rem; background: #f5f5f5; padding: 1rem; border: 1px solid #dddddd; }
+            footer { margin-top: 2rem; font-size: 0.9rem; color: #666666; }
+        </style>
+    </head>
+    <body>
+    
+        <h1>BMI &amp; Daily Calorie Calculator</h1>
+        <p>Calculate your Body Mass Index (BMI) and estimate daily caloric needs based on your weight, height, age, sex and activity level. Understanding your BMI and caloric requirements can help you set realistic health and fitness goals.</p>
+        <form id="bmi-form" onsubmit="event.preventDefault(); calculateBMI();">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" min="0" step="0.1" required>
+            <label for="height">Height (cm)</label>
+            <input type="number" id="height" min="0" step="0.1" required>
+            <label for="age">Age</label>
+            <input type="number" id="age" min="0" max="120" required>
+            <label for="sex">Sex</label>
+            <select id="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+            <label for="activity">Activity Level</label>
+            <select id="activity">
+                <option value="1.2">Sedentary</option>
+                <option value="1.375">Lightly active</option>
+                <option value="1.55">Moderately active</option>
+                <option value="1.725">Very active</option>
+                <option value="1.9">Super active</option>
+            </select>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="bmiResult" class="result" style="display:none;"></div>
+        <h2>What is BMI?</h2>
+        <p>BMI is a simple index of weight‑for‑height that is commonly used to classify underweight, overweight and obesity in adults. It is calculated by dividing weight in kilograms by the square of height in metres. However, BMI does not differentiate between muscle and fat mass, so athletes may have a high BMI while still having low body fat.</p>
+        <p>Daily calorie needs are based on your basal metabolic rate (BMR) and activity level. The Mifflin‑St Jeor equation is used here. Once you know your caloric target, you can distribute your intake into macronutrients (carbohydrates, proteins and fats) according to your goals.</p>
+    <script>
+
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value) / 100; // convert to metres
+            const age = parseInt(document.getElementById('age').value);
+            const sex = document.getElementById('sex').value;
+            const activity = parseFloat(document.getElementById('activity').value);
+            if (isNaN(weight) || isNaN(height) || isNaN(age)) return;
+            const bmi = weight / (height * height);
+            // Basal Metabolic Rate (Mifflin‑St Jeor)
+            let bmr;
+            if (sex === 'male') {
+                bmr = 10 * weight + 6.25 * (height * 100) - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * (height * 100) - 5 * age - 161;
+            }
+            const calories = bmr * activity;
+            const resultDiv = document.getElementById('bmiResult');
+            resultDiv.style.display = 'block';
+            // Macro distribution: 50% carbs, 20% protein, 30% fat
+            const carbs = calories * 0.5 / 4;
+            const protein = calories * 0.2 / 4;
+            const fat = calories * 0.3 / 9;
+            resultDiv.innerHTML = `<strong>BMI:</strong> ${bmi.toFixed(2)}<br>` +
+                                  `<strong>Daily Calories:</strong> ${calories.toFixed(0)} kcal<br>` +
+                                  `<strong>Suggested Macro Intake:</strong><br>` +
+                                  `Carbohydrates: ${carbs.toFixed(0)} g, Protein: ${protein.toFixed(0)} g, Fat: ${fat.toFixed(0)} g`;
+        }
+    
+</script>
+        <footer>
+            <p>Disclaimer: This tool is for informational purposes only. Please verify any calculations with official sources before making financial or health decisions.</p>
+        </footer>
+    </body>
+    </html>
+    
